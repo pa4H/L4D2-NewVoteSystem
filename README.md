@@ -7,7 +7,7 @@ Plugin allows you to:
 2. Vote for kick a player from another team.
 3. Vote for killing infected bots: __!killbots__, __!kb__.
 4. Vote for kick of spectators: __!kickspec__, __!ks__, __!sk__, __!nospec__, __!speckick__.
-5. Ability to use the __!rematch__ command. (Just start restart chapter vote)
+5. Ability to use the __!rematch__ command. (Just start RestartChapter vote)
   
 Fixed a game bug when 60% of votes are not pass the vote. (VALVe, did you skip math lessions?)
 
@@ -22,4 +22,9 @@ Fixed game bug "Voting is already started".
   
   Q: Why plugin allow to votekick players from another team
   A: This is a game bug that has existed since the release. I'm not going to change the established mechanics of the game.
+  
+  Q: Map change not working!
+  A: Did you forget about l4d2_changelevel.smx? Put it in your plugins folder.
  ```
+ 
+[Developer](https://vk.com/pa4h1337)
