@@ -14,7 +14,7 @@ Fixed a game bug when 60% of votes are not pass the vote. (VALVe, did you skip m
 Plugin disable "Return to Lobby".
 
 Fixed game bug "Voting is already started".
-  
+
 ## FAQ:
 ```
   Q: Why player who created the vote not vote "Yes" automatically?
@@ -25,6 +25,11 @@ Fixed game bug "Voting is already started".
   
   Q: Map change not working!
   A: Did you forget about l4d2_changelevel.smx? Put it in your plugins folder.
+  
+  Q: How to compile?
+  A: Compiled on SourceMod 1.10. Additionally you need colors.inc
  ```
  
+[colors.inc](https://forums.alliedmods.net/showthread.php?t=96831)
+
 [Developer](https://vk.com/pa4h1337)
