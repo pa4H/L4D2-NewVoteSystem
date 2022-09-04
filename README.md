@@ -1,4 +1,4 @@
-# L4D2-NewVoteSystem
+# [L4D2] New vote system
 
 The voting system is written from scratch.
 
