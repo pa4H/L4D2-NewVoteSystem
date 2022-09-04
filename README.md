@@ -1,4 +1,5 @@
 # [L4D2] New vote system
+**For work, you need [l4d2_changelevel.smx](https://forums.alliedmods.net/showthread.php?t=319156)**
 
 The voting system is written from scratch.
 
@@ -27,9 +28,8 @@ Fixed game bug "Voting is already started".
   A: Did you forget about l4d2_changelevel.smx? Put it in your plugins folder.
   
   Q: How to compile?
-  A: Compiled on SourceMod 1.10. Additionally you need colors.inc
+  A: Compiled on SourceMod 1.10. Additionally you need colors.inc (ask Google)
  ```
- 
-[colors.inc](https://forums.alliedmods.net/showthread.php?t=96831)
+ ##
 
 [Developer](https://vk.com/pa4h1337)
