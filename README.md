@@ -28,9 +28,8 @@ Fixed game bug "Voting is already started".
   A: Did you forget about l4d2_changelevel.smx? Put it in your plugins folder.
   
   Q: How to compile?
-  A: Compiled on SourceMod 1.10. Additionally you need colors.inc (ask Google)
+  A: Compiled on SourceMod 1.11. Additionally you need colors.inc
  ```
  ##
-Attention! The plugin may contain bugs.
-  
+[Colors.inc](https://forums.alliedmods.net/showthread.php?t=96831) for plugin compilation.  
 [Developer](https://vk.com/pa4h1337)
