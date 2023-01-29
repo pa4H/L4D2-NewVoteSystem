@@ -1,5 +1,5 @@
 # [L4D2] New vote system
-**For work, you need [l4d2_changelevel.smx](https://forums.alliedmods.net/showthread.php?t=319156)**
+**For work you need [l4d2_changelevel.smx](https://forums.alliedmods.net/showthread.php?t=319156)**
 
 The voting system is written from scratch.
 
