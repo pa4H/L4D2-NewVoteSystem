@@ -31,5 +31,6 @@ Fixed game bug "Voting is already started".
   A: Compiled on SourceMod 1.11. Additionally you need colors.inc
  ```
  ##
+Compiled on SourceMod 1.11.  
 [Colors.inc](https://forums.alliedmods.net/showthread.php?t=96831) for plugin compilation.  
 [Developer](https://vk.com/pa4h1337)
