@@ -14,6 +14,8 @@ Fixed a game bug when 60% of votes are not pass the vote. (VALVe, did you skip m
 
 Plugin disable "Return to Lobby".
 
+Plugin keeps alltalk enabled if players voted to enable it.
+
 Fixed game bug "Voting is already started".
 
 ## FAQ:
