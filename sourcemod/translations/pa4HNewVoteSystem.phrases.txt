@@ -4,6 +4,12 @@
 	{
 		"en"		"[PEZDOX]"
 	}
+	"VoteCooldown"
+	{
+		"#format"	"{1:i}"
+		"en"		"{green}You can't vote so often! Try after {olive}{1} {green}sec."
+		"ru"		"{green}Нельзя голосовать так часто! Попробуйте через {olive}{1} {green}сек."
+	}
 	"KickReason"
 	{
 		"en"		"You have been kicked"
@@ -34,19 +40,19 @@
 
 	"NoKillInfectedBots"
 	{
-		"#format"   "{1:s}"
+		"#format"	"{1:s}"
 		"en"		"{green}{1} {default}Only infected team can use this command"
 		"ru"		"{green}{1} {default}Только команда зараженных может использовать эту команду"
 	}
 	"KillInfectedBots"
 	{
-		"#format"   "{1:s},{2:s}"
+		"#format"   	"{1:s},{2:s}"
 		"en"		"{lightgreen}{2} {default}votes for killing {green}bots"
 		"ru"		"{lightgreen}{2} {default}голосует за убийство {green}ботов"
 	}
 	"KillInfectedBotsVoteName"
 	{
-		"en"		"Kill infected bots"
+		"en"		"Kill infected bots?"
 		"ru"		"Убить зараженных ботов?"
 	}
 	"KillInfectedBotsVotePass"
@@ -57,40 +63,40 @@
 
 	"ReturnToLobby1"
 	{
-		"#format"   "{1:s}"
-		"en"		"{green}{1} {default}you cant vote for return to {green}lobby"
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {default}You cant vote for return to {green}lobby"
 		"ru"		"{green}{1} {default}Нельзя выходить в {green}лобби"
 	}
 	"ReturnToLobby2"
 	{
-		"#format"   "{1:s},{2:s}"
+		"#format"	"{1:s},{2:s}"
 		"en"		"Stupid moron {lightgreen}{2} {default}tried to go to {default}lobby"
 		"ru"		"Тупой дебил {lightgreen}{2} {default}попытался выйти в {default}лобби"
 	}
 
 	"AllTalkON"
 	{
-		"#format"   "{1:s}"
+		"#format"	"{1:s}"
 		"en"		"{green}{1} {default}AllTalk enabled!"
 		"ru"		"{green}{1} {default}Общий чат включен!"
 	}
 	"AllTalkOFF"
 	{
-		"#format"   "{1:s}"
+		"#format"	"{1:s}"
 		"en"		"{green}{1} {default}AllTalk disabled!"
 		"ru"		"{green}{1} {default}Общий чат отключен!"
 	}
 	"ChangeAllTalkOn"
 	{
-		"#format"   "{1:s},{2:s}"
-		"en"		"{lightgreen}{2} {default}votes for enable {green}AllTalk!"
-		"ru"		"{lightgreen}{2} {default}голосует за включение {green}общего чата!"
+		"#format"	"{1:s},{2:s}"
+		"en"		"{lightgreen}{2} {default}votes for enable {green}AllTalk"
+		"ru"		"{lightgreen}{2} {default}голосует за включение {green}общего чата"
 	}
 	"ChangeAllTalkOff"
 	{
-		"#format"   "{1:s},{2:s}"
-		"en"		"{lightgreen}{2} {default}votes for disable {green}AllTalk!"
-		"ru"		"{lightgreen}{2} {default}голосует за выключение {green}общего чата!"
+		"#format"	"{1:s},{2:s}"
+		"en"		"{lightgreen}{2} {default}votes for disable {green}AllTalk"
+		"ru"		"{lightgreen}{2} {default}голосует за выключение {green}общего чата"
 	}
 	"OnChangeAllTalkVoteName"
 	{
@@ -115,13 +121,13 @@
 
 	"ChangeChapter"
 	{
-		"#format"   "{1:s},{2:s},{3:s}"
-		"en"		"{lightgreen}{2} {default}votes for change map to: {green}{3}"
-		"ru"		"{lightgreen}{2} {default}голосует за смену карты на: {green}{3}"
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"{lightgreen}{2} {default}votes for {green}{3} {default}map"
+		"ru"		"{lightgreen}{2} {default}голосует за карту {green}{3}"
 	}
 	"ChangeChapterVoteName"
 	{
-		"#format"   "{1:s}"
+		"#format"	"{1:s}"
 		"en"		"Change map to {1}?"
 		"ru"		"Сменить карту на {1}?"
 	}
@@ -133,25 +139,25 @@
 
 	"Kick"
 	{
-		"#format"   "{1:s},{2:s},{3:s}"
+		"#format"	"{1:s},{2:s},{3:s}"
 		"en"		"{lightgreen}{2} {default}votes for kick player {green}{3}"
 		"ru"		"{lightgreen}{2} {default}голосует за исключение игрока {green}{3}"
 	}
 	"KickVoteName"
 	{
-		"#format"   "{1:s}"
+		"#format"	"{1:s}"
 		"en"		"Kick player {1}?"
 		"ru"		"Выгнать игрока {1}?"
 	}
 	"KickVotePass"
 	{
-		"en"		"Get the fuck out from here!"
+		"en"		"Get out from here!"
 		"ru"		"Пшел отсюда!"
 	}
 
 	"RestartChapter"
 	{
-		"#format"   "{1:s},{2:s}"
+		"#format"	"{1:s},{2:s}"
 		"en"		"{lightgreen}{2} {default}votes for restart {green}chapter"
 		"ru"		"{lightgreen}{2} {default}голосует за {green}перезапуск {default}главы!"
 	}

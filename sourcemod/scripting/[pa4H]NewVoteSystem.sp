@@ -13,6 +13,7 @@ int count_YesVotes; // Количество голосов ЗА
 int count_NoVotes; // Количество голосов ПРОТИВ
 int playersCount; // Количество игроков способных голосовать
 bool VoteInProgress; // Если true, то голосование проводится
+int timeCooldown = 0; // Время, через которое можно будет голосовать
 bool CanPlayerVote[MAXPLAYERS + 1]; // False если игрок проголосовал
 
 char argOne[64]; // Первый аргумент из консоли
@@ -32,6 +33,7 @@ native void L4D2_ChangeLevel(const char[] sMap); // Нужен плагин chan
 
 Handle g_hTimer; // Для убийства таймера обязательно нужно создавать его через Handle
 Handle map_Timer;
+Handle cooldown_Timer;
 public Plugin myinfo = 
 {
 	name = "New Vote System", 
@@ -72,7 +74,8 @@ public OnPluginStart()
 
 public Action Listener_CallVote(client, const char[] command, argc)
 {
-	if (VoteInProgress) { PrintToConsoleAll("Vote in progress"); return Plugin_Handled; } // Голосование идёт? Выходим из функции
+	if (VoteInProgress) { PrintToChat(client, "Ебучий баг голосования!!!"); return Plugin_Handled; } // Голосование идёт? Выходим из функции
+	if (timeCooldown > 0) { CPrintToChat(client, "%t", "VoteCooldown", timeCooldown); return Plugin_Handled; }
 	
 	GetCmdArg(1, argOne, sizeof(argOne)); // Получаем 1 аргумент
 	GetCmdArg(2, argTwo, sizeof(argTwo)); // Получаем 2 аргумент
@@ -163,6 +166,7 @@ public Action Listener_CallVote(client, const char[] command, argc)
 	if (StrEqual(argOne, "Kick", false))
 	{
 		int gClient = GetClientOfUserId(StringToInt(argTwo));
+		if (!IsValidClient(gClient)) { return Plugin_Handled; }
 		char nick[64];
 		GetClientName(gClient, nick, sizeof(nick));
 		
@@ -194,7 +198,7 @@ public void createVote(int client, int team)
 	// Создаем VGUI с голосованием
 	for (int x = 1; x <= MaxClients; x++)
 	{
-		if (IsValidClient(x))
+		if (IsValidClient(x) && GetClientTeam(x) != L4D2_TEAM_SPECTATORS)
 		{
 			getVoteAndAnswer(x); // Получаем фразы на языке клиента (x)
 			BfWrite bf = UserMessageToBfWrite(StartMessageOne("VoteStart", x, USERMSG_RELIABLE));
@@ -220,7 +224,7 @@ public void createVote(int client, int team)
 				CanPlayerVote[i] = true;
 				playersCount++;
 			}
-			else if (voteInTeam != 2 && voteInTeam != 3) // Если должны голосовать игроки со всех команд
+			else if (voteInTeam == L4D2_TEAM_ALL && GetClientTeam(i) != L4D2_TEAM_SPECTATORS) // Если должны голосовать игроки со всех команд
 			{
 				CanPlayerVote[i] = true;
 				playersCount++;
@@ -229,7 +233,7 @@ public void createVote(int client, int team)
 	}
 	
 	UpdateVotes();
-	delete g_hTimer;
+	if (g_hTimer != INVALID_HANDLE) { delete g_hTimer; }
 	g_hTimer = CreateTimer(10.0, Timer_VoteCheck); // Спустя это время голосование закончится
 }
 public Action Timer_VoteCheck(Handle timer) // Таймер
@@ -240,6 +244,7 @@ public Action Timer_VoteCheck(Handle timer) // Таймер
 		VoteInProgress = false; // ...оно завершается
 		UpdateVotes();
 	}
+	g_hTimer = null;
 	return Plugin_Stop;
 }
 void getVoteAndAnswer(int client) // Получаем фразы на языке клиента
@@ -342,14 +347,33 @@ void UpdateVotes()
 		}
 		g_hTimer = null; // https://www.safezone.cc/threads/zaversheno-sourcepawn-sovety-dlja-novichkov-i-profi.37354/#add2
 		//CPrintToChatAll("YES: %i NO: %i", count_YesVotes, count_NoVotes); // Debug
+		
+		timeCooldown = 3;
+		delete cooldown_Timer;
+		cooldown_Timer = CreateTimer(1.0, Timer_VoteCooldown, _, TIMER_REPEAT); //
+	}
+}
+public Action Timer_VoteCooldown(Handle timer) // Таймер задержки на следующее голосование
+{
+	if (timeCooldown != 0)
+	{
+		timeCooldown--;
+		return Plugin_Continue;
+	}
+	else
+	{
+		cooldown_Timer = null;
+		return Plugin_Stop;
 	}
 }
 
 public void OnMapEnd()
 {
-	delete g_hTimer;
+	//delete g_hTimer;
 	delete map_Timer;
+	delete cooldown_Timer;
 	VoteInProgress = false;
+	timeCooldown = 0;
 }
 
 void votePassedFunc() // Если голосование успешно, то выполняем...
@@ -401,7 +425,7 @@ void votePassedFunc() // Если голосование успешно, то в
 	{
 		FormatEx(mapForChange, sizeof(mapForChange), "%t", buferArgument2);
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange, _, TIMER_FLAG_NO_MAPCHANGE);
+		map_Timer = CreateTimer(3.0, Timer_MapChange);
 		return;
 	}
 	// ChangeMission
@@ -411,14 +435,16 @@ void votePassedFunc() // Если голосование успешно, то в
 		FormatEx(buf, sizeof(buf), "map%s", buferArgument2); // Добавляем к L4D2C1 слово map = mapL4D2C1
 		FormatEx(mapForChange, sizeof(mapForChange), "%t", buf); // Даём mapL4D2C1, получаем c1m1_hotel
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange, _, TIMER_FLAG_NO_MAPCHANGE);
+		map_Timer = CreateTimer(3.0, Timer_MapChange);
 		return;
 	}
 	
 	// Kick
 	if (StrEqual(buferArgument, "Kick", false))
 	{
-		KickClient(StringToInt(buferArgument2), "%t", "KickReason"); // "Вы были исключены голосованием"
+		int cli = StringToInt(buferArgument2);
+		if (!IsValidClient(cli)) { return; }
+		KickClient(cli, "%t", "KickReason"); // "Вы были исключены голосованием"
 		return;
 	}
 	
@@ -427,7 +453,7 @@ void votePassedFunc() // Если голосование успешно, то в
 	{
 		GetCurrentMap(mapForChange, sizeof(mapForChange)); // Получаем называние карты (c8m1_apartments)
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange, _, TIMER_FLAG_NO_MAPCHANGE); // Меняем на ту же самую карту
+		map_Timer = CreateTimer(3.0, Timer_MapChange); // Меняем на ту же самую карту
 		return;
 	}
 }
