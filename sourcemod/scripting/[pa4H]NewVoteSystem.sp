@@ -7,6 +7,9 @@
 #define L4D2_TEAM_SURVIVORS  2  // ID выживших
 #define L4D2_TEAM_INFECTED   3  // ID зараженных
 
+const int _voteDelay = 10; // Задержка между вызовом голосования
+const int _voteLimit = 9; // 10 раз игрок может вызывать голосование
+
 Handle g_AllTalkCvar; // Переменная для взаимодействия с sv_alltalk
 
 int count_YesVotes; // Количество голосов ЗА
@@ -15,6 +18,7 @@ int playersCount; // Количество игроков способных го
 bool VoteInProgress; // Если true, то голосование проводится
 int timeCooldown = 0; // Время, через которое можно будет голосовать
 bool CanPlayerVote[MAXPLAYERS + 1]; // False если игрок проголосовал
+int playerLimit[MAXPLAYERS + 1]; // Сколько раз игрок может вызывать голосование
 
 char argOne[64]; // Первый аргумент из консоли
 char argTwo[64]; // Второй аргумент из консоли
@@ -34,6 +38,7 @@ native void L4D2_ChangeLevel(const char[] sMap); // Нужен плагин chan
 Handle g_hTimer; // Для убийства таймера обязательно нужно создавать его через Handle
 Handle map_Timer;
 Handle cooldown_Timer;
+KeyValues kv;
 public Plugin myinfo = 
 {
 	name = "New Vote System", 
@@ -65,22 +70,43 @@ public OnPluginStart()
 	RegConsoleCmd("Vote", vote); // Обработчик команды Vote (Vote Yes; Vote No)
 	AddCommandListener(Listener_CallVote, "callvote"); // Обработчик команды callvote
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy); // Сервер запустился
+	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Pre);
 	
 	LoadTranslations("pa4HNewVoteSystem.phrases"); // Загружаем тексты всех фраз
 	LoadTranslations("pa4HNewVoteSystemMaps.phrases"); // Загружаем названия карт
 	
 	FormatEx(PREFIX, sizeof(PREFIX), "%t", "PREFIX");
+	
+	char kvPath[256]
+	BuildPath(Path_SM, kvPath, sizeof(kvPath), "configs/DisallowVote.txt");
+	kv = new KeyValues("DisallowVote");
+	if (!FileToKeyValues(kv, kvPath)) {
+		PrintToServer("Не удалось загрузить DisallowVote");
+	}
+	resetLimits(true); // Сброс лимитов на возможность вызывать голосование 
 }
 
 public Action Listener_CallVote(client, const char[] command, argc)
 {
 	if (VoteInProgress) { PrintToChat(client, "Ебучий баг голосования!!!"); return Plugin_Handled; } // Голосование идёт? Выходим из функции
 	if (timeCooldown > 0) { CPrintToChat(client, "%t", "VoteCooldown", timeCooldown); return Plugin_Handled; }
+	// Проверяем возможность голосовать
+	char steamID[64];
+	GetClientAuthId(client, AuthId_SteamID64, steamID, sizeof(steamID));
+	if (KvJumpToKey(kv, steamID, false)) {
+		CPrintToChat(client, "%T", "DisallowVote", client, PREFIX);
+		return Plugin_Handled;
+	}
+	if (playerLimit[client] == 0) {
+		CPrintToChat(client, "%T", "VoteLimit", client, PREFIX, _voteLimit);
+		return Plugin_Handled;
+	}
+	// Проверка окончена
 	
 	GetCmdArg(1, argOne, sizeof(argOne)); // Получаем 1 аргумент
 	GetCmdArg(2, argTwo, sizeof(argTwo)); // Получаем 2 аргумент
 	GetClientName(client, callerName, sizeof(callerName)); // Получаем ник игрока
-	PrintToConsoleAll("%s %s", argOne, argTwo); // debug
+	//PrintToConsoleAll("%s %s", argOne, argTwo); // debug
 	
 	// KickSpec
 	if (StrEqual(argOne, "KickSpec", false)) // Если вызвали голосование ReturnToLobby
@@ -187,6 +213,7 @@ public Action Listener_CallVote(client, const char[] command, argc)
 public void createVote(int client, int team)
 {
 	//CPrintToChatAll("createVote: arg1: %s arg2: %s team: %i", argOne, argTwo, voteInTeam); // Debug
+	playerLimit[client]--; // На одну возможность проголосовать меньше
 	GetClientName(client, callerName, sizeof(callerName)); // Получаем имя игрока
 	voteInTeam = team; // В какой тиме будет происходить голосование
 	voteName = argOne; // Имя
@@ -348,7 +375,7 @@ void UpdateVotes()
 		g_hTimer = null; // https://www.safezone.cc/threads/zaversheno-sourcepawn-sovety-dlja-novichkov-i-profi.37354/#add2
 		//CPrintToChatAll("YES: %i NO: %i", count_YesVotes, count_NoVotes); // Debug
 		
-		timeCooldown = 3;
+		timeCooldown = _voteDelay;
 		delete cooldown_Timer;
 		cooldown_Timer = CreateTimer(1.0, Timer_VoteCooldown, _, TIMER_REPEAT); //
 	}
@@ -561,5 +588,23 @@ public Action keepAlltalk(Handle timer)
 	if (!keepAllTalk) { return Plugin_Handled; }
 	g_AllTalkCvar = FindConVar("sv_alltalk"); // Обращаемся к sv_alltalk
 	SetConVarBool(g_AllTalkCvar, true); // = sv_alltalk 1
+	return Plugin_Handled;
+}
+
+void resetLimits(bool all = true, int cli = 0) // Сброс лимитов на возможность вызывать голосование 
+{
+	if (!all) {
+		playerLimit[cli] = _voteLimit;
+		return;
+	}
+	for (int i = 1; i < MaxClients; i++)
+	{
+		playerLimit[i] = _voteLimit;
+	}
+}
+public Action PlayerDisconnect_Event(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	resetLimits(false, client);
 	return Plugin_Handled;
 } 

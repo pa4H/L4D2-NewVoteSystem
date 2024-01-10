@@ -242,27 +242,27 @@
 	"c12m1_hilltop"
 	{
 		"en"		"Blood Harvest: 1. The Woods"
-		"ru"		"Кровавый жатва: 1. Леса"
+		"ru"		"Кровавая жатва: 1. Леса"
 	}
 	"c12m2_traintunnel"
 	{
 		"en"		"Blood Harvest: 2. The Tunnel"
-		"ru"		"Кровавый жатва: 2. Туннель"
+		"ru"		"Кровавая жатва: 2. Туннель"
 	}
 	"c12m3_bridge"
 	{
 		"en"		"Blood Harvest: 3. The Bridge"
-		"ru"		"Кровавый жатва: 3. Мост"
+		"ru"		"Кровавая жатва: 3. Мост"
 	}
 	"c12m4_barn"
 	{
 		"en"		"Blood Harvest: 4. The Train Station"
-		"ru"		"Кровавый жатва: 4. Ж/Д станция"
+		"ru"		"Кровавая жатва: 4. Ж/Д станция"
 	}
 	"c12m5_cornfield"
 	{
 		"en"		"Blood Harvest: 5. Farmhouse Finale"
-		"ru"		"Кровавый жатва: 5. Ферма"
+		"ru"		"Кровавая жатва: 5. Ферма"
 	}
 
 	"c13m1_alpinecreek"
@@ -299,73 +299,73 @@
 	
 	"L4D2C1"
 	{
-		"en"		"Dead Center: 1. Hotel"
-		"ru"		"Вымерший центр: 1. Отель"
+		"en"		"Dead Center"
+		"ru"		"Вымерший центр"
 	}
 	"L4D2C2"
 	{
-		"en"		"Dark Carnival: 1. Highway"
-		"ru"		"Мрачный карнавал: 1. Автострада"
+		"en"		"Dark Carnival"
+		"ru"		"Мрачный карнавал"
 	}
 	"L4D2C3"
 	{
-		"en"		"Swamp Fever: 1. Plank Country"
-		"ru"		"Болотная лихорадка: 1. Дощатые задворки"
+		"en"		"Swamp Fever"
+		"ru"		"Болотная лихорадка"
 	}
 	"L4D2C4"
 	{
-		"en"		"Hard Rain: 1. Milltown"
-		"ru"		"Ужасный ливень: 1. Городишко при заводе"
+		"en"		"Hard Rain"
+		"ru"		"Ужасный ливень"
 	}
 	"L4D2C5"
 	{
-		"en"		"The Parish: 1. Waterfront"
-		"ru"		"Приход: 1. Берег"
+		"en"		"The Parish"
+		"ru"		"Приход"
 	}
 	"L4D2C6"
 	{
-		"en"		"The Passing: 1. Riverbank"
-		"ru"		"Переход: 1. Берег реки"
+		"en"		"The Passing"
+		"ru"		"Переход"
 	}
 	"L4D2C7"
 	{
-		"en"		"The Sacrifice: 1. Docks"
-		"ru"		"Жертва: 1. Доки"
+		"en"		"The Sacrifice"
+		"ru"		"Жертва"
 	}
 	"L4D2C8"
 	{
-		"en"		"No Mercy: 1. The Apartments"
-		"ru"		"Нет милосердию: 1. Апартаменты
+		"en"		"No Mercy"
+		"ru"		"Нет милосердию"
 	}
 	"L4D2C9"
 	{
-		"en"		"Crash Course: 1. The Alleys"
-		"ru"		"Роковой полёт: 1. Переулки"
+		"en"		"Crash Course"
+		"ru"		"Роковой полёт"
 	}
 	"L4D2C10"
 	{
-		"en"		"Death Toll: 1. The Turnpike"
-		"ru"		"Похоронный звон: 1. Ограждение"
+		"en"		"Death Toll"
+		"ru"		"Похоронный звон"
 	}
 	"L4D2C11"
 	{
-		"en"		"Dead Air: 1. The Greenhouse"
-		"ru"		"Смерть в воздухе: 1. Теплица"
+		"en"		"Dead Air"
+		"ru"		"Смерть в воздухе"
 	}
 	"L4D2C12"
 	{
-		"en"		"Blood Harvest: 1. The Woods"
-		"ru"		"Кровавый жатва: 1. Леса"
+		"en"		"Blood Harvest"
+		"ru"		"Кровавая жатва"
 	}
 	"L4D2C13"
 	{
-		"en"		"Cold Stream: 1. Alpine Creek"
-		"ru"		"Холодный ручей: 1. Альпийский ручей"
+		"en"		"Cold Stream"
+		"ru"		"Холодный ручей"
 	}
 	"L4D2C14"
 	{
-		"en"		"The Last Stand: 1. The Junkyard"
-		"ru"		"Последний рубеж: 1. Свалка"
+		"en"		"The Last Stand"
+		"ru"		"Последний рубеж"
 	}
 	
 	"mapL4D2C1"

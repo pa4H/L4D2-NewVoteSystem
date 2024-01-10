@@ -171,4 +171,16 @@
 		"en"		"Restarting..."
 		"ru"		"Перезапуск..."
 	}
+	"DisallowVote"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {default}You are disabled from voting.\n{lightgreen}!discord {default}- to atone for guilt."
+		"ru"		"{green}{1} {default}Вам отключена возможность голосовать.\n{lightgreen}!discord {default}- для искупления вины."
+	}
+	"VoteLimit"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"{green}{1} {default}You have reached your voting limit of {green}0/{2}"
+		"ru"		"{green}{1} {default}Вы исчерпали лимит голосований {green}0/{2}"
+	}
 }
