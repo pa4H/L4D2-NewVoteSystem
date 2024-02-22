@@ -44,7 +44,7 @@ public Plugin myinfo =
 	name = "New Vote System", 
 	author = "pa4H", 
 	description = "New vote system for L4D2", 
-	version = "1.0", 
+	version = "220224", 
 	url = "vk.com/pa4h1337"
 }
 
@@ -54,6 +54,9 @@ public OnPluginStart()
 	
 	RegAdminCmd("sm_pass", voteYes, ADMFLAG_BAN);
 	RegAdminCmd("sm_veto", voteNo, ADMFLAG_BAN);
+	RegConsoleCmd("sm_alltalk", getAllTalk, "");
+	RegAdminCmd("sm_resetvotes", resetVote, ADMFLAG_BAN);
+	RegAdminCmd("sm_resetvote", resetVote, ADMFLAG_BAN);
 	
 	RegConsoleCmd("sm_kickspec", kickSpecVote, "");
 	RegConsoleCmd("sm_sk", kickSpecVote, "");
@@ -62,6 +65,9 @@ public OnPluginStart()
 	
 	RegConsoleCmd("sm_killbots", kickInfectedBotsVote, "");
 	RegConsoleCmd("sm_kb", kickInfectedBotsVote, "");
+	
+	RegConsoleCmd("sm_voteboss", voteBossVote, "");
+	RegConsoleCmd("sm_bossvote", voteBossVote, "");
 	
 	RegConsoleCmd("sm_voterestart", restartChapterVote, "");
 	RegConsoleCmd("sm_restart", restartChapterVote, "");
@@ -81,14 +87,14 @@ public OnPluginStart()
 	BuildPath(Path_SM, kvPath, sizeof(kvPath), "configs/DisallowVote.txt");
 	kv = new KeyValues("DisallowVote");
 	if (!FileToKeyValues(kv, kvPath)) {
-		PrintToServer("Не удалось загрузить DisallowVote");
+		PrintToServer("Error loading DisallowVote");
 	}
 	resetLimits(true); // Сброс лимитов на возможность вызывать голосование 
 }
 
 public Action Listener_CallVote(client, const char[] command, argc)
 {
-	if (VoteInProgress) { PrintToChat(client, "Ебучий баг голосования!!!"); return Plugin_Handled; } // Голосование идёт? Выходим из функции
+	if (VoteInProgress) { PrintToChat(client, "Ебучий баг голосования!!!!"); return Plugin_Handled; } // Голосование идёт? Выходим из функции
 	if (timeCooldown > 0) { CPrintToChat(client, "%t", "VoteCooldown", timeCooldown); return Plugin_Handled; }
 	// Проверяем возможность голосовать
 	char steamID[64];
@@ -109,14 +115,14 @@ public Action Listener_CallVote(client, const char[] command, argc)
 	//PrintToConsoleAll("%s %s", argOne, argTwo); // debug
 	
 	// KickSpec
-	if (StrEqual(argOne, "KickSpec", false)) // Если вызвали голосование ReturnToLobby
+	if (StrEqual(argOne, "KickSpec", false))
 	{
 		CPrintToChatAll("%t", "KickSpec", PREFIX, callerName); // "{1} {2} голосует за исключение зрителей!"
 		createVote(client, L4D2_TEAM_ALL);
 		return Plugin_Handled;
 	}
 	// KillBots
-	if (StrEqual(argOne, "KillBots", false)) // Если вызвали голосование ReturnToLobby
+	if (StrEqual(argOne, "KillBots", false))
 	{
 		if (GetClientTeam(client) == L4D2_TEAM_INFECTED)
 		{
@@ -135,8 +141,15 @@ public Action Listener_CallVote(client, const char[] command, argc)
 		}
 		return Plugin_Handled;
 	}
+	// VoteBoss
+	if (StrEqual(argOne, "VoteBoss", false))
+	{
+		CPrintToChatAll("%t", "VoteBoss", PREFIX, callerName); // "{1} предлагает вызвать Танка"
+		createVote(client, L4D2_TEAM_ALL);
+		return Plugin_Handled;
+	}
 	// ReturnToLobby
-	if (StrEqual(argOne, "ReturnToLobby", false)) // Если вызвали голосование ReturnToLobby
+	if (StrEqual(argOne, "ReturnToLobby", false))
 	{
 		for (new x = 1; x <= MaxClients; x++)
 		{
@@ -303,6 +316,12 @@ void getVoteAndAnswer(int client) // Получаем фразы на языке
 		FormatEx(votePassAnswer, sizeof(votePassAnswer), "%T", "KillInfectedBotsVotePass", client);
 		return;
 	}
+	if (StrEqual(argOne, "VoteBoss", false))
+	{
+		FormatEx(voteName, sizeof(voteName), "%T", "VoteBossVoteName", client);
+		FormatEx(votePassAnswer, sizeof(votePassAnswer), "%T", "VoteBossVotePass", client);
+		return;
+	}
 	if (StrEqual(argOne, "ChangeChapter", false))
 	{
 		FormatEx(txtBufer, sizeof(txtBufer), "%T", argTwo, client); // Вместо c8m1_apartments получаем = Нет милосердию: 1.Апартаменты
@@ -447,10 +466,16 @@ void votePassedFunc() // Если голосование успешно, то в
 		}
 		return;
 	}
+	// VoteBoss
+	if (StrEqual(buferArgument, "VoteBoss", false))
+	{
+		ServerCommand("sm_voteTankVotePass");
+		return;
+	}
 	// ChangeChapter
 	if (StrEqual(buferArgument, "ChangeChapter", false))
 	{
-		FormatEx(mapForChange, sizeof(mapForChange), "%t", buferArgument2);
+		FormatEx(mapForChange, sizeof(mapForChange), "%s", buferArgument2);
 		delete map_Timer;
 		map_Timer = CreateTimer(3.0, Timer_MapChange);
 		return;
@@ -546,6 +571,17 @@ public Action voteNo(int client, int args)
 	}
 	return Plugin_Handled;
 }
+public Action getAllTalk(int client, int args)
+{
+	g_AllTalkCvar = FindConVar("sv_alltalk");
+	CPrintToChat(client, "%t", "AllTalkStatus", PREFIX, GetConVarInt(g_AllTalkCvar));
+	return Plugin_Handled;
+}
+public Action resetVote(int client, int args)
+{
+	resetLimits(true);
+	return Plugin_Handled;
+}
 
 public Action customVote(int client, int args)
 {
@@ -576,6 +612,11 @@ public Action kickSpecVote(int client, int args)
 public Action kickInfectedBotsVote(int client, int args)
 {
 	FakeClientCommandEx(client, "callvote KillBots");
+	return Plugin_Handled;
+}
+public Action voteBossVote(int client, int args)
+{
+	FakeClientCommandEx(client, "callvote VoteBoss");
 	return Plugin_Handled;
 }
 
