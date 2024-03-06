@@ -1,6 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <colors>
+#include <l4d2_changelevel>
 
 #define L4D2_TEAM_ALL        -1 // ID всех команд
 #define L4D2_TEAM_SPECTATORS 1  // ID наблюдателей
@@ -33,7 +34,6 @@ char mapForChange[64]; // Переменная для хранения назв�
 char txtBufer[256]; // Буферная переменная для форматирования текста
 char PREFIX[16]; // Переменная для хранения префикса
 bool keepAllTalk; // Если true, включаем в начале раунда AllTalk
-native void L4D2_ChangeLevel(const char[] sMap); // Нужен плагин changelevel.smx (для корректной смены карты)
 
 Handle g_hTimer; // Для убийства таймера обязательно нужно создавать его через Handle
 Handle map_Timer;
@@ -44,7 +44,7 @@ public Plugin myinfo =
 	name = "New Vote System", 
 	author = "pa4H", 
 	description = "New vote system for L4D2", 
-	version = "220224", 
+	version = "040324", 
 	url = "vk.com/pa4h1337"
 }
 
@@ -54,8 +54,12 @@ public OnPluginStart()
 	
 	RegAdminCmd("sm_pass", voteYes, ADMFLAG_BAN);
 	RegAdminCmd("sm_veto", voteNo, ADMFLAG_BAN);
+	
 	RegConsoleCmd("sm_alltalk", getAllTalk, "");
+	
 	RegAdminCmd("sm_resetvotes", resetVote, ADMFLAG_BAN);
+	RegAdminCmd("sm_resetlimit", resetVote, ADMFLAG_BAN);
+	RegAdminCmd("sm_resetlimits", resetVote, ADMFLAG_BAN);
 	RegAdminCmd("sm_resetvote", resetVote, ADMFLAG_BAN);
 	
 	RegConsoleCmd("sm_kickspec", kickSpecVote, "");
@@ -84,7 +88,7 @@ public OnPluginStart()
 	FormatEx(PREFIX, sizeof(PREFIX), "%t", "PREFIX");
 	
 	char kvPath[256]
-	BuildPath(Path_SM, kvPath, sizeof(kvPath), "configs/DisallowVote.txt");
+	BuildPath(Path_SM, kvPath, sizeof(kvPath), "data/DisallowVote.txt");
 	kv = new KeyValues("DisallowVote");
 	if (!FileToKeyValues(kv, kvPath)) {
 		PrintToServer("Error loading DisallowVote");
@@ -477,7 +481,7 @@ void votePassedFunc() // Если голосование успешно, то в
 	{
 		FormatEx(mapForChange, sizeof(mapForChange), "%s", buferArgument2);
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange);
+		map_Timer = CreateTimer(3.0, Timer_MapChange, true);
 		return;
 	}
 	// ChangeMission
@@ -487,7 +491,7 @@ void votePassedFunc() // Если голосование успешно, то в
 		FormatEx(buf, sizeof(buf), "map%s", buferArgument2); // Добавляем к L4D2C1 слово map = mapL4D2C1
 		FormatEx(mapForChange, sizeof(mapForChange), "%t", buf); // Даём mapL4D2C1, получаем c1m1_hotel
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange);
+		map_Timer = CreateTimer(3.0, Timer_MapChange, true);
 		return;
 	}
 	
@@ -505,15 +509,15 @@ void votePassedFunc() // Если голосование успешно, то в
 	{
 		GetCurrentMap(mapForChange, sizeof(mapForChange)); // Получаем называние карты (c8m1_apartments)
 		delete map_Timer;
-		map_Timer = CreateTimer(3.0, Timer_MapChange); // Меняем на ту же самую карту
+		map_Timer = CreateTimer(3.0, Timer_MapChange, false); // Меняем на ту же самую карту С СОХРАНЕНИЕМ ОЧКОВ
 		return;
 	}
 }
 
-public Action Timer_MapChange(Handle timer) // Таймер
+public Action Timer_MapChange(Handle timer, any resetScores) // Таймер
 {
 	map_Timer = null; // Убиваем таймер
-	L4D2_ChangeLevel(mapForChange); // При помощи native void L4D2_ChangeLevel меняем карту.
+	L4D2_ChangeLevel(mapForChange, resetScores); // При помощи native void L4D2_ChangeLevel меняем карту.
 	return Plugin_Stop;
 }
 

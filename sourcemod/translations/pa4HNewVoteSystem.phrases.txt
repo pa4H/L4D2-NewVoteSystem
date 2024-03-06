@@ -60,6 +60,34 @@
 		"en"		"Killing bots"
 		"ru"		"Убиваем ботов"
 	}
+	
+	"VoteBoss"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{lightgreen}{2} {default}offers to call {green}Tank"
+		"ru"		"{lightgreen}{2} {default}предлагает вызвать {green}Танка"
+	}
+	"VoteBossVoteName"
+	{
+		"en"		"Summon Tank 10%% of the way?"
+		"ru"		"Вызвать Танка через 10%% пути?"
+	}
+	"VoteBossVotePass"
+	{
+		"en"		"The tank will appear after 10%% of the way"
+		"ru"		"Танк появится через 10%% пути"
+	}
+	"VoteBossEndMap"
+	{
+		"en"		"You cannot summon {green}Tank {default}at the end of the map"
+		"ru"		"Нельзя вызвать {green}Танка {default}под конец карты"
+	}
+	"VoteBossPercent"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}Tank {default}spawns on {lightgreen}{1}"
+		"ru"		"{green}Танк {default}появится на {lightgreen}{1}"
+	}
 
 	"ReturnToLobby1"
 	{
@@ -125,6 +153,7 @@
 		"en"		"{lightgreen}{2} {default}votes for {green}{3} {default}map"
 		"ru"		"{lightgreen}{2} {default}голосует за карту {green}{3}"
 	}
+
 	"ChangeChapterVoteName"
 	{
 		"#format"	"{1:s}"
@@ -182,5 +211,10 @@
 		"#format"	"{1:s},{2:i}"
 		"en"		"{green}{1} {default}You have reached your voting limit of {green}0/{2}"
 		"ru"		"{green}{1} {default}Вы исчерпали лимит голосований {green}0/{2}"
+	}
+	"AllTalkStatus"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"{green}{1} {default}sv_alltalk {lightgreen}{2}"
 	}
 }
